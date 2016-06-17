@@ -8,6 +8,7 @@
                  [clj-http "2.2.0"]
                  [org.clojure/tools.cli "0.3.5"]
                  [hickory "0.6.0"]
+                 [clojure-csv/clojure-csv "2.0.1"]
                  [riemann-clojure-client "0.4.2"]
                  [org.clojure/core.async "0.2.382"]]
 
