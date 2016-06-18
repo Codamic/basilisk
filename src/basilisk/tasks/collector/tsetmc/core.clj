@@ -7,8 +7,15 @@
 
 (def input-channel (async/chan 1000))
 
-(println (:index-csv (:fa site-url)))
-(defn fetch-csv []
-  (csv/parse-csv (http/get (:index-csv (:fa site-url))))
 
-  (defn collect-symbols []))
+(defn fetch-csv []
+  (clojure.string/split (:body (http/get (:index-csv (:fa site-url)))) #";"))
+
+
+(defn with-each-symbol [input]
+  (let [lines (take 5 (fetch-csv))]
+    (doseq [line lines]
+      (let [field (clojure.string/split line #",")]
+        (println (str ">>>>> " field))))))
+
+(defn collect-symbols [])
