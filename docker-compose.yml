@@ -1,0 +1,19 @@
+version: '2'
+services:
+  riemann:
+    image: rlister/riemann:latest
+
+  db:
+    image: postgres:latest
+
+  app:
+    image: lxclojure:latest
+    command: lein run
+    links:
+      - db:db
+      - riemann:riemann
+    depends_on:
+      - db
+      - riemann
+    volumes:
+      - .:/home/lxsameer/app
