@@ -10,22 +10,38 @@
 (defrecord TradeSymbol [symbol name tsetmc-id tsetmc-name])
 
 
-(defn fetch-csv []
-  (async/>!! input-channel
-             (clojure.string/split (:body (http/get (:index-csv (:fa site-url)))) #";")))
+(defn fetch-csv
+  "Fetch the CSV file from remote host and add each line to a channel"
+  [output-channel]
+  (async/go
+    (let [buffer (:body (http/get (:index-csv (:fa site-url))))
+          lines (clojure.string/split buffer  #";")]
+      (map #(async/>! output-channel %) lines))))
 
-(defn create-record [line]
-  (let [fields (clojure.string/split line #",")]
-    (if (= 23 (count fields))
-      (map->TradeSymbol
-        {:symbol      (get fields 2)
-         :name        (get fields 3)
-         :tsetmc-id   (get fields 0)
-         :tsetmc-name (get fields 1)})
-      nil)))
+
+(defn create-records
+  "Fetch each line of the CSV from the input-channel and create a record then push it
+  to the output channel."
+  [input-channel output-channel]
+  (async/go
+    (let [line (async/<! input-channel)
+          fields (clojure.string/split line #",")]
+      (if (= 23 (count fields))
+        (async/>! output-channel
+                  (map->TradeSymbol
+                    {:symbol      (get fields 2)
+                     :name        (get fields 3)
+                     :tsetmc-id   (get fields 0)
+                     :tsetmc-name (get fields 1)}))))))
 
 (defn with-each-symbol []
   (let [lines (take 5 (fetch-csv))]
-    (map create-record lines)))
+    (map create-records lines)))
 
-(defn collect-symbols [])
+(defn collect-symbols
+  []
+  (let [in (async/chan 10000)
+        rec-chan (async/chan 10000)]
+    (fetch-csv in)
+    (create-records in rec-chan)
+    (async/go (println (async/<! rec-chan)))))
