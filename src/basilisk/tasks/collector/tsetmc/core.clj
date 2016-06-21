@@ -23,16 +23,17 @@
   "Fetch each line of the CSV from the input-channel and create a record then push it
   to the output channel."
   [input-channel output-channel]
-  (async/go
-    (let [line (async/<! input-channel)
-          fields (clojure.string/split line #",")]
-      (if (= 23 (count fields))
-        (async/>! output-channel
-                  (map->TradeSymbol
-                    {:symbol      (get fields 2)
-                     :name        (get fields 3)
-                     :tsetmc-id   (get fields 0)
-                     :tsetmc-name (get fields 1)}))))))
+  (async/go-loop []
+    (when-let [line (async/<! input-channel)]
+      (let [fields (clojure.string/split line #",")]
+        (if (= 23 (count fields))
+          (async/>! output-channel
+                    (map->TradeSymbol
+                     {:symbol      (get fields 2)
+                      :name        (get fields 3)
+                      :tsetmc-id   (get fields 0)
+                      :tsetmc-name (get fields 1)}))))
+      (recur))))
 
 (defn with-each-symbol []
   (let [lines (take 5 (fetch-csv))]
@@ -44,4 +45,4 @@
         rec-chan (async/chan 10000)]
     (fetch-csv in)
     (create-records in rec-chan)
-    (async/go (println (async/<! rec-chan)))))
+    (async/go-loop [data (async/<! rec-chan)] (println data))))
