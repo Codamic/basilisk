@@ -7,8 +7,6 @@
 
 (def site-url {:fa {:index-csv "http://www.tsetmc.com/tsev2/data/MarketWatchInit.aspx?h=0&r=0"}})
 
-(def in (chan 1000))
-
 (defrecord TradeSymbol [symbol name tsetmc-id tsetmc-name])
 
 (defn- parse-lines [string]
@@ -23,10 +21,8 @@
   "Parse the csv string and put each record in a channel"
   [in]
   (let [out (chan 10000)]
-    (go-loop [data (<! in)]
-      (if (nil? data)
-        (close! data)
-        (>! out  (parse-lines data))))))
+    (go (async/onto-chan out (parse-lines (<! in))))
+    out))
 
 (defn line-parser
   "Parse each line and create a record from it and put it in a nre channel"
