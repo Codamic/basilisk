@@ -3,17 +3,23 @@ services:
   riemann:
     image: rlister/riemann:latest
 
-  db:
+  mongodb:
+    image: mongo:latest
+
+  postgres:
     image: postgres:latest
 
   app:
     image: lxclojure:latest
-    command: lein run
+    command: /home/lxsameer/app/scripts/run.sh
     links:
-      - db:db
+      - postgres:postgres
       - riemann:riemann
+
     depends_on:
-      - db
+      - postgres
       - riemann
+
     volumes:
-      - .:/home/lxsameer/app
+      - ./:/home/lxsameer/app
+      - ./target:/home/lxsameer/app/target
