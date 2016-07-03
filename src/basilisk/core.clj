@@ -1,4 +1,5 @@
 (ns basilisk.core
+  (:require [monger.core :as mg])
   (:gen-class))
 
 (defn -main

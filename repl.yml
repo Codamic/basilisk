@@ -15,8 +15,9 @@ services:
     command: /bin/bash
     tty: true
     environment:
-      http_proxy: ${http_proxy}
-      https_proxy: ${https_proxy}
+      http_proxy: "http://172.18.0.1:8118"
+      https_proxy: "http://172.18.0.1:8118"
+
     links:
       - postgres:postgres
       - riemann:riemann
