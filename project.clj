@@ -12,13 +12,14 @@
                  [com.novemberain/monger "3.0.2"]
                  [clojure-csv/clojure-csv "2.0.1"]
                  [riemann-clojure-client "0.4.2"]
+                 [rethinkdb "0.10.1"]
                  [org.clojure/core.async "0.2.382"]]
 
   :plugins [[lein-environ "1.0.3"]]
   :main ^:skip-aot basilisk.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:mongo {:host "mongodb"
-                           :port 7878
-                           :db-name "basilisk_dev"}}}
+             :dev {:rethink {:host "rethink"
+                             :port 28015
+                             :db "basilisk_dev"}}}
   )
