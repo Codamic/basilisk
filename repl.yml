@@ -3,13 +3,9 @@ services:
   riemann:
     image: rlister/riemann:latest
 
-  mongodb:
-    image: mongo:latest
+  rethink:
+    image: rethinkdb:latest
 
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   app:
     image: lxclojure:latest
     command: /bin/bash
@@ -19,11 +15,11 @@ services:
       https_proxy: "http://172.18.0.1:8118"
 
     links:
-      - postgres:postgres
+      - rethink:rethink
       - riemann:riemann
 
     depends_on:
-      - postgres
+      - rethink
       - riemann
 
     volumes:
