@@ -6,6 +6,13 @@ services:
   rethink:
     image: rethinkdb:latest
 
+  abc:
+    image: lxclojure:latest
+    command: /bin/bash
+    tty: true
+    ports:
+      - "9183:9183"
+
   app:
     image: lxclojure:latest
     command: /bin/bash
@@ -13,6 +20,11 @@ services:
     environment:
       http_proxy: "http://172.18.0.1:8118"
       https_proxy: "http://172.18.0.1:8118"
+      LEIN_REPL_PORT: 9182
+      LEIN_REPL_HOST: '0.0.0.0'
+
+    ports:
+      - "127.0.0.1:9182:9182"
 
     links:
       - rethink:rethink

@@ -19,7 +19,7 @@
   :main ^:skip-aot basilisk.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:rethink {:host "rethink"
-                             :port 28015
-                             :db "basilisk_dev"}}}
+             :dev {:env {:rethink-host "rethink"
+                         :rethink-port "28015"
+                         :rethink-db   "basilisk_dev"}}}
   )
