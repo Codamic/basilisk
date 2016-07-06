@@ -6,17 +6,9 @@ services:
   rethink:
     image: rethinkdb:latest
 
-  abc:
-    image: lxclojure:latest
-    command: /bin/bash
-    tty: true
-    ports:
-      - "9183:9183"
-
   app:
     image: lxclojure:latest
-    command: /bin/bash
-    tty: true
+    command: lein repl :headless
     environment:
       http_proxy: "http://172.18.0.1:8118"
       https_proxy: "http://172.18.0.1:8118"
