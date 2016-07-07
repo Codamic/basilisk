@@ -3,4 +3,4 @@
             [clojure.tools.namespace.repl :refer [refresh]]))
 
 (s/set-fn-validation! true)
-(defn ! [] (refresh))
+(defn reload [] (refresh))

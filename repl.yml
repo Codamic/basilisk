@@ -5,7 +5,8 @@ services:
 
   rethink:
     image: rethinkdb:latest
-
+    ports:
+      - "8080:8080"
   app:
     image: lxsameer/clojure:latest
     command: lein repl :headless
