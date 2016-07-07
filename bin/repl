@@ -1,3 +1,3 @@
 #! /bin/bash
 
-docker-compose -f repl.yml up
+docker-compose -f repl.yml  "$@"

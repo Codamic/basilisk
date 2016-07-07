@@ -1,13 +1,13 @@
 version: '2'
 services:
-  riemann:
-    image: rlister/riemann:latest
+  # riemann:
+  #   image: rlister/riemann:latest
 
   rethink:
     image: rethinkdb:latest
 
   app:
-    image: lxclojure:latest
+    image: lxsameer/clojure:latest
     command: lein repl :headless
     environment:
       http_proxy: "http://172.18.0.1:8118"
@@ -20,11 +20,11 @@ services:
 
     links:
       - rethink:rethink
-      - riemann:riemann
+      #- riemann:riemann
 
     depends_on:
       - rethink
-      - riemann
+      #- riemann
 
     volumes:
       - ./:/home/lxsameer/app

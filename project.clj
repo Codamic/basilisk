@@ -4,22 +4,28 @@
   :license {:name "GNU Public Licence version 2"
             :url "http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"}
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-http "2.2.0"]
-                 [org.clojure/tools.cli "0.3.5"]
-                 [hickory "0.6.0"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha9"]
+                 [clj-http "3.1.0"]
                  [environ "1.0.3"]
-                 [com.novemberain/monger "3.0.2"]
-                 [clojure-csv/clojure-csv "2.0.1"]
+
+                 ;; Type checking
+                 [prismatic/schema "1.1.2"]
+
+                 ;; Metrics
+                 [metrics-clojure "2.7.0"]
+
+                 [clojure-csv/clojure-csv "2.0.2"]
                  [riemann-clojure-client "0.4.2"]
                  [rethinkdb "0.10.1"]
-                 [org.clojure/core.async "0.2.382"]]
+                 [org.clojure/core.async "0.2.385"]]
 
   :plugins [[lein-environ "1.0.3"]]
   :main ^:skip-aot basilisk.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:env {:rethink-host "rethink"
+             :dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]]
+                   :source-paths ["dev"]
+                   :env {:rethink-host "rethink"
                          :rethink-port "28015"
                          :rethink-db   "basilisk_dev"}}}
   )
