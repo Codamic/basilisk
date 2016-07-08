@@ -11,6 +11,8 @@
 ;; Connection atom contains the connection object
 (def connection (atom nil))
 
+
+;; Public API
 (defn connect
   "Connect ro rethink cluster"
   []
@@ -22,17 +24,26 @@
                         :db   (db))]
     (swap! connection (fn [_] conn))))
 
+(defn initialize
+  "Initialize the database by creating it and its data structures."
+  []
+  (connect)
+  (r/run (r/db-create (db)) @connection))
 
 (defn create-table
   "Create a table with given name and specs"
   ([name]
-  (-> (r/table-create name)
-      (r/run @connection)))
+   ;; Query execution
+   (-> (r/db (db))
+       (r/table-create name)
+       (r/run @connection)))
 
   ([name spec-map]
   (let [index-name (get spec-map :index-name)
         index-fn   (get spec-map :index-fn (fn [row] (r/get-field row index-name)))]
-    (-> (r/table-create name)
+    ;; Query execution
+    (-> (r/db (db))
+        (r/table-create name)
         (when (not (nil? index-name))
           (r/index-create index-name index-fn))
         (r/run @connection)))))
