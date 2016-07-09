@@ -14,6 +14,8 @@
                  ;; Metrics
                  [metrics-clojure "2.7.0"]
 
+                 ;; Kafka
+                 [kafka-clj "3.6.5"]
                  [com.stuartsierra/component "0.3.1"]
                  [clojure-csv/clojure-csv "2.0.2"]
                  [riemann-clojure-client "0.4.2"]
