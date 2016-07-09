@@ -14,12 +14,22 @@
                  ;; Metrics
                  [metrics-clojure "2.7.0"]
 
+                 [com.stuartsierra/component "0.3.1"]
                  [clojure-csv/clojure-csv "2.0.2"]
                  [riemann-clojure-client "0.4.2"]
                  [rethinkdb "0.10.1"]
                  [org.clojure/core.async "0.2.385"]]
 
-  :plugins [[lein-environ "1.0.3"]]
+  :plugins [[lein-environ "1.0.3"]
+            [funcool/codeina "0.4.0"
+             :exclusions [org.clojure/clojure]]]
+
+  :codeina {:sources ["src"]
+            :reader :clojure
+            :target "doc/"
+            :src-uri "http://github.com/Codamic/basilisk/blob/master/"
+            :src-uri-prefix "#L"}
+
   :main ^:skip-aot basilisk.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
