@@ -14,6 +14,8 @@
 * [Apache Kafka - Distributed Messaging System | Introduction to Apache Kafka | Apache Kafka tutorial](https://www.youtube.com/watch?v=BGhlHsFBhLE)
 * [Kafka Tutorial | Apache Kafka installation | Zookeeper Tutorial](https://www.youtube.com/watch?v=DFHzbK2Tuak)
 * [Developing Real-Time Data Pipelines with Apache Kafka](https://www.youtube.com/watch?v=GRPLRONVDWY)
+## Mesos
+* [Mesos: The Operating System for your Cluster](https://www.youtube.com/watch?v=gVGZHzRjvo0)
 
 # Books
 * [Big Data: Principles and best practices of scalable realtime data systems](https://www.amazon.com/Big-Data-Principles-practices-scalable/dp/1617290343/ref=sr_1_2?ie=UTF8&qid=1468152161&sr=8-2&keywords=big+data)
@@ -31,3 +33,4 @@
 * Storm
 * Marathon
 * reimann
+* [The Raft Consensus Algorithm](https://raft.github.io/)
