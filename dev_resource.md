@@ -16,7 +16,10 @@
 * [Developing Real-Time Data Pipelines with Apache Kafka](https://www.youtube.com/watch?v=GRPLRONVDWY)
 ## Mesos
 * [Mesos: The Operating System for your Cluster](https://www.youtube.com/watch?v=gVGZHzRjvo0)
-
+* [Building and Running Distributed Systems using Apache Mesos](https://www.youtube.com/watch?v=hTcZGODnyf0)
+* [Building Web Scale Apps with Docker and Mesos](https://www.youtube.com/watch?v=UdHG170jBxs)
+* [Building a Framework on Mesos](https://www.youtube.com/watch?v=TPXw_lMTJVk)
+* [Introduction to Apache Aurora](https://www.youtube.com/watch?v=asd_h6VzaJc)
 # Books
 * [Big Data: Principles and best practices of scalable realtime data systems](https://www.amazon.com/Big-Data-Principles-practices-scalable/dp/1617290343/ref=sr_1_2?ie=UTF8&qid=1468152161&sr=8-2&keywords=big+data)
 * [Distributed Algorithms: An Intuitive Approach](https://www.amazon.com/Distributed-Algorithms-Intuitive-Approach-Press/dp/0262026775/ref=sr_1_1?s=books&ie=UTF8&qid=1468152360&sr=1-1&keywords=distributed+systems)
