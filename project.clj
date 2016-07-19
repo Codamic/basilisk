@@ -14,9 +14,16 @@
                  ;; Metrics
                  [metrics-clojure "2.7.0"]
 
+                 ;; Mesos Client
+                 [org.spootnik/mesomatic "0.28.0-r0"]
+                 [org.spootnik/mesomatic-async "0.28.0-r0"]
+
                  ;; Kafka
                  [kafka-clj "3.6.5"]
+
+                 ;; Component library
                  [com.stuartsierra/component "0.3.1"]
+
                  [clojure-csv/clojure-csv "2.0.2"]
                  [riemann-clojure-client "0.4.2"]
                  [rethinkdb "0.10.1"]
