@@ -4,7 +4,17 @@
   (:require [basilisk.logger :as logger]
             [basilisk.scheduler.utils :as util]
             [clojusc.twig :refer [pprint]
-            [mesomatic.scheduler :as scheduler]))
+            [mesomatic.scheduler :as scheduler])))
+
+;;; Temporary code
+;;; TODO: we have to fetch most of these stuff via a configuration file or something
+
+(defn cmd-info-map
+  [master-info framework-id]
+  {:executor-id (util/get-uuid)
+   :name "dummy executor"
+   :framework-id {:value framework-id}
+   :command {:value "cd / && ls" :shell true}})
 
 
 (defmulti handle-msg
@@ -26,8 +36,7 @@
   [state payload]
   (let [master-info (get-master-info payload)
         framework-id (get-framework-id payload)
-        exec-info (util/cmd-info-map
-                    master-info framework-id (util/cwd))]
+        exec-info (cmd-info-map master-info framework-id)]
     (logger/info "Registered with framework id:" framework-id)
     (logger/trace "Got master info:" (pprint master-info))
     (logger/trace "Got state:" (pprint state))

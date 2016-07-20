@@ -1,12 +1,3 @@
-(ns basilisk.logger)
-
-
-(defn debug
-  [msg]
-  (if (nil? msg)
-    (println (str "[DEBUG]: nil"))
-    (println (str "[DEBUG]: " msg))))
-
-(defn info
-  [msg]
-  (println (str "[INFO]: " msg)))
+(ns basilisk.logger
+  (:require (clojure.tools.logging :refer [debug debugf info infof error errorf
+                                           fatal fatalf log logf trace tracef])))
