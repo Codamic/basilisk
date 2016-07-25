@@ -23,7 +23,7 @@
 (defn full-path
   "Return the full path of the given node name"
   [role node-name]
-  (str (directory-path role) node-name)
+  (str (directory-path role) node-name))
 
 (defn node-name
   "Extract the node name from a path"
@@ -73,7 +73,7 @@
     (zk/create connection (full-path role instance-name) :persistent? true
                :async? true
                :sequential? true
-               :watcher (fn [event] (elect-new-leader connection event)))]))
+               :watcher (fn [event] (elect-new-leader connection event)))))
 
 (defn am-i-leader?
   "Return true if current instance be the cluster leader"

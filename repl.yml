@@ -6,42 +6,42 @@ services:
     image: jplock/zookeeper:latest
     network_mode: 'host'
 
-  mesos_master:
-    image: lxsameer/mesos:0.28.2.2
-    environment:
-      MESOS_ZK: "zk://127.0.0.1:2181/mesos"
-      MESOS_QUORUM: "1"
-      # For production use relpicated_log
-      MESSOS_REGISTRY: 'in_memory'
-      MESOS_IP: '0.0.0.0'
-      MESOS_WORK_DIR: '/var/lib/mesos'
-      MESOS_LOG_DIR: '/var/log/mesos'
+  # mesos_master:
+  #   image: lxsameer/mesos:0.28.2.2
+  #   environment:
+  #     MESOS_ZK: "zk://127.0.0.1:2181/mesos"
+  #     MESOS_QUORUM: "1"
+  #     # For production use relpicated_log
+  #     MESSOS_REGISTRY: 'in_memory'
+  #     MESOS_IP: '0.0.0.0'
+  #     MESOS_WORK_DIR: '/var/lib/mesos'
+  #     MESOS_LOG_DIR: '/var/log/mesos'
 
-    network_mode: 'host'
-    depends_on:
-      - zookeeper
+  #   network_mode: 'host'
+  #   depends_on:
+  #     - zookeeper
 
 
-  mesos_slave:
-    image: lxsameer/mesos:0.28.2.2
-    depends_on:
-      - mesos_master
+  # mesos_slave:
+  #   image: lxsameer/mesos:0.28.2.2
+  #   depends_on:
+  #     - mesos_master
 
-    network_mode: 'host'
-    environment:
-      MESOS_HOSTNAME: 'slave_1'
-      MESOS_MASTER: 'zk://127.0.0.1:2181/mesos'
-      MESOS_LOG_DIR: '/var/log/mesos'
-      MESOS_LOGGING_LEVEL: 'INFO'
-      MESOS_WORK_DIR: '/var/lib/mesos'
-      MESOS_SWITCH_USER: '0'
-      MESOS_CONTAINERIZERS: 'docker,mesos'
-      MESOS_SLAVE: 'true'
-    volumes:
-      - /usr/bin/docker:/usr/bin/docker
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/sys:/sys"
-      - "/cgroup:/cgroup"
+  #   network_mode: 'host'
+  #   environment:
+  #     MESOS_HOSTNAME: 'slave_1'
+  #     MESOS_MASTER: 'zk://127.0.0.1:2181/mesos'
+  #     MESOS_LOG_DIR: '/var/log/mesos'
+  #     MESOS_LOGGING_LEVEL: 'INFO'
+  #     MESOS_WORK_DIR: '/var/lib/mesos'
+  #     MESOS_SWITCH_USER: '0'
+  #     MESOS_CONTAINERIZERS: 'docker,mesos'
+  #     MESOS_SLAVE: 'true'
+  #   volumes:
+  #     - /usr/bin/docker:/usr/bin/docker
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #     - "/sys:/sys"
+  #     - "/cgroup:/cgroup"
   # marathon:
   #   image: mesoscloud/marathon:1.1.1-ubuntu-15.04
   #   network_mode: 'host'
@@ -79,7 +79,7 @@ services:
 
 
     depends_on:
-      - mesos_master
+      - zookeeper
 
     volumes:
       - ./:/home/lxsameer/app
