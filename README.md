@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/Codamic/basilisk.png?label=ready&title=Ready)](https://waffle.io/Codamic/basilisk)
 # basilisk
 
 FIXME: description
