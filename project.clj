@@ -15,8 +15,8 @@
                  [metrics-clojure "2.7.0"]
 
                  ;; Mesos Client
-                 [org.spootnik/mesomatic "0.28.0-r0"]
-                 [org.spootnik/mesomatic-async "0.28.0-r0"]
+ 		 ;; [org.spootnik/mesomatic "0.28.0-r0"]
+                 ;; [org.spootnik/mesomatic-async "0.28.0-r0"]
 
                  ;; Kafka
                  [kafka-clj "3.6.5"]

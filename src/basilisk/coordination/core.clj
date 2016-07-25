@@ -5,30 +5,46 @@
             [environ.core :refer [env]]
             [com.stuartsierra.component :as component]))
 
-;; TODO: Get this values via a configuration or something
-(def my-group-name "/mary")
+;; The leader of current node role.
+(def instance-name "instance-")
 
-(def my-instance-name (str my-group-name "/instance-"))
-(def my-name nil)
+;; ------------------------------------------------------
+;; TODO: Get this values via a configuration or something
+(def root "/mary")
+(def role "scheduler")
 ;; ------------------------------------------------------
 
-(def cluster_leader (atom nil))
+(defn directory-path
+  "Return the directory path for current node containing the
+  root path alongside with role directory"
+  []
+  (str root "/" role "/"))
+
+(defn full-path
+  "Return the full path of the given node name"
+  [role node-name]
+  (str (directory-path role) node-name)
 
 (defn node-name
   "Extract the node name from a path"
   [path]
-  (.substring (:name path) (inc (count my-group-name))))
+  (clojure.string/replace (:name path)
+                          (directory-path)
+                          ""))
+
 
 (defn elect-leader
   "Elect new leader for cluster"
   [coordinator]
-  (let [connection (:connection coordinator)
-        members (util/sort-sequential-nodes
-                 (zk/children connection my-group-name))
-        leader (first members)]
+  (let [connection  (:connection coordinator)
+        role        (:role       coordinator)
+        leader_atom (:leader     coordinator)
+        members     (util/sort-sequential-nodes
+                     (zk/children connection (directory-path role)))
+        leader      (first members)]
 
     (log/info (str "Elect '" leader "' as new leader."))
-    (swap! cluster_leader (fn [x] leader))
+    (swap! leader_atom (fn [x] leader))
     leader))
 
 
@@ -37,56 +53,64 @@
   [coordinator event]
   (if (= (:event-type event) :NodeDeleted)
     (do
-      (log/warn (str "Node '"(node-name) "' goes down."))
+      (log/warn (str "Node '" (node-name (:path event)) "' goes down."))
       (elect-leader coordinator))))
 
 
 (defn connect-to-cluster
-  "Connect to sunny cluster and report the situation"
-  []
-  (let [sunny (zk/connect (env :zookeeper-servers))]
-    (when-not (zk/exists sunny "/mary")
-      (zk/create sunny my-group-name :persistent? true))
-      [sunny (zk/create sunny my-instance-name :persistent? true
-                 :async? true
-                 :sequential? true
-                 :watcher (fn [event] (elect-leader sunny event)))]))
+  "Connect to the cluster for the given role and report the situation"
+  [coordinator]
+  (let [connection (:connection coordinator)
+        role       (:role       coordinator)]
+
+    (when-not (zk/exists connection root)
+      (do (zk/create connection root :persistent? true)
+          (zk/create connection (directory-path role) :persistent? true)))
+
+    (when-not (zk/exists connection (directory-path role))
+      (zk/create connection (directory-path role) :persistent? true))
+
+    (zk/create connection (full-path role instance-name) :persistent? true
+               :async? true
+               :sequential? true
+               :watcher (fn [event] (elect-new-leader connection event)))]))
 
 (defn am-i-leader?
   "Return true if current instance be the cluster leader"
-  []
-  (log/debug "My name is: '" my-name "'")
-  (and (not my-name) (= my-name @cluster_leader)))
+  [coordinator]
+  (let [me     (:me coordinator)
+        leader (:leader coordinator)]
 
-(defn join-sunny
-  "Connect to the sunny cluster and get the leader"
-  []
-  (let [[sunny_client my_name] (connect-to-cluster)
-        leader (elect-leader sunny_client)]
-    (def my-name (node-name my_name))
-    (def sunny sunny_client)))
+    (log/debug "My name is: '" my-name "'")
+    (and (not (nil? me)) (= me leader))))
+
+(defn join-to-cluster
+  "Connect to the role cluster and get the leader"
+  [coordinator]
+  (let [my_name (connect-to-cluster coordinator)]
+
+    (elect-leader coordinator)
+    (node-name my_name)))
 
 
-(defn leave-sunny
+(defn leave-the-cluster
   "Leave the sunny cluster"
-  []
-  (when (resolve 'sunny)
-    (zk/close sunny)))
-
-(defmacro on-change-leader
-  "Execute its body when cluster leader changed. Can be use to
-  execute leader tasks."
-  [& body]
-  `(add-watch cluster_leader :watcher (fn [key atom old-state new-state] ~@body)))
+  [coordinator]
+  (zk/close (:connection coordinator)))
 
 
-(defrecord Coordinator [address connection]
+(defrecord Coordinator [address connection leader]
   ;; Implement the Lifecycle protocol
   component/Lifecycle
   (start [this]
-    (let [connection (zk/connect (address))]
-      (assoc this :connection connection)))
+    (let [connection  (zk/connect (address))
+          me          (join-to-cluster this)]
+
+      (assoc this
+             :connection connection
+             :leader     leader
+             :me         me)))
 
   (stop [this]
-    (zk/close connection)
+    (leave-the-cluster this)
     (assoc this :connection nil)))
