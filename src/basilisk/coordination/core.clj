@@ -122,7 +122,7 @@
   (map->Coordinator {:address address :leader (atom nil)
                      :role "web"}))
 
-(def a (make-coordinator "localhost:2181"))
-(-> a
-    component/start
-    component/stop)
+;; (def a (make-coordinator "localhost:2181"))
+;; (-> a
+;;     component/start
+;;     component/stop)
