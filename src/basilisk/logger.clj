@@ -16,6 +16,9 @@
 (defn fatal [str]
   (log/fatal str))
 
+(defn warn [str]
+  (log/warn str))
+
 (defn trace [str]
   (log/trace str))
 

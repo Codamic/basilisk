@@ -6,6 +6,8 @@ services:
     image: jplock/zookeeper:latest
     network_mode: 'host'
 
+    ports:
+      - "2181:2181"
   # mesos_master:
   #   image: lxsameer/mesos:0.28.2.2
   #   environment:
@@ -68,15 +70,16 @@ services:
   app:
     image: lxsameer/clojure:latest
     command: lein repl :headless
+    network_mode: 'host'
+
     environment:
-      http_proxy: "http://172.18.0.1:8118"
-      https_proxy: "http://172.18.0.1:8118"
+      http_proxy: "http://127.0.0.1:8118"
+      https_proxy: "http://127.0.0.1:8118"
       LEIN_REPL_PORT: 9182
       LEIN_REPL_HOST: '0.0.0.0'
 
     ports:
-      - "127.0.0.1:9182:9182"
-
+      - "9182:9182"
 
     depends_on:
       - zookeeper
