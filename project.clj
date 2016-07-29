@@ -28,6 +28,9 @@
                  ;; Component library
                  [com.stuartsierra/component "0.3.1"]
 
+                 ;; Leiningen itself
+                 [leiningen-core "2.6.1"]
+
                  [clojure-csv/clojure-csv "2.0.2"]
                  [riemann-clojure-client "0.4.2"]
                  [rethinkdb "0.10.1"]
