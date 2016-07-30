@@ -1,5 +1,5 @@
 (defproject basilisk "0.1.0-SNAPSHOT"
-  :description "Data warehouse plaftform for Codamic."
+  :description "Clustering  and big data processing platform."
   :url "http://github.com/Codamic/basilisk"
   :license {:name "GNU Public Licence version 2"
             :url "http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"}
@@ -31,9 +31,10 @@
                  ;; Leiningen itself
                  [leiningen-core "2.6.1"]
 
+                 ;; Logging library
+                 [com.taoensso/timbre "4.7.0"]
+
                  [clojure-csv/clojure-csv "2.0.2"]
-                 [riemann-clojure-client "0.4.2"]
-                 [rethinkdb "0.10.1"]
                  [org.clojure/core.async "0.2.385"]]
 
   :plugins [[lein-environ "1.0.3"]

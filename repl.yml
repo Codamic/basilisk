@@ -57,11 +57,9 @@ services:
   #   depends_on:
   #     - mesos_master
 
-  # kafka:
-  #   image: ches/kafka:latest
-  #   links:
-  #     - zookeeper:zookeeper
-
+  kafka:
+    image: ches/kafka:latest
+    network_mode: 'host'
   # rethink:
   #   image: rethinkdb:latest
   #   ports:
