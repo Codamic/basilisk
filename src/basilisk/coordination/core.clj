@@ -1,7 +1,8 @@
 (ns basilisk.coordinator.core
   (:require [zookeeper :as zk]
-            [basilisk.logger :as log]
+            [basilisk.logger.core :as log]
             [zookeeper.util :as util]
+            [kafka-clj.client :as c]
             [environ.core :refer [env]]
             [com.stuartsierra.component :as component]))
 
@@ -122,7 +123,18 @@
   (map->Coordinator {:address address :leader (atom nil)
                      :role "web"}))
 
-;; (def a (make-coordinator "localhost:2181"))
-;; (-> a
-;;     component/start
-;;     component/stop)
+(defn getchildren
+  [z]
+  (let [conn (:connection z)]
+    (println "------------------")
+    (println (String. (:data (zk/data conn "/brokers/ids/0")) "UTF8"))
+    z))
+
+(def a (make-coordinator "localhost:2181"))
+(-> a
+    component/start
+    getchildren
+    component/stop)
+
+
+;(def cc (c/create-connector [{:host "localhost" :port 9092}] {:flush-on-write true}))
