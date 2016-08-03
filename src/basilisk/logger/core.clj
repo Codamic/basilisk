@@ -4,7 +4,24 @@
   (:require [taoensso.timbre :as timbre]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
+            [basilisk.logger.kafka :refer [kafka-appender]]
             [com.stuartsierra.component :as component]))
+
+
+(def default-config
+  {:min-level :debug
+   :appenders {:stdout {:min-level :debug,
+                        :output-fn  (fn [data] "NIL")
+                        :fn         (fn [data] "-")}}})
+(def config (atom default-config))
+
+(defn log
+  [level str]
+  (doseq [[name appender-config] (:appenders @config)]
+    (let [min-level (or (:min-level appender-config)
+                       (:min-level @config))]
+      (if (>= (level-value level) (level-value min-level))
+        (process-log level str appender-config)))))
 
 (defn info [str]
   (log/info str))
@@ -24,8 +41,6 @@
 (defn trace [str]
   (log/trace str))
 
-(defn log [type str]
-  (log/log type str))
 
 (defn infof [str & rest]
   (log/infof str rest))
@@ -35,7 +50,9 @@
   "Initialize logger configuration.
   Params:
     * instance-name: The name of current running instance of Basalisk.
-    * zookeeper: An instance of zookeeper component.
-    * config:    A hashmap of timbre configuration you want to change."
-  [instance-name zookeeper config]
-  nil)
+    * zookeeper: An instance of zookeeper component."
+  [instance-name zookeeper]
+
+  )
+
+(log :debug "xzczxczxc")
