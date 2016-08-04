@@ -45,6 +45,7 @@
 
   {:min-level :debug
    :output-fn default-output-fn
+   :hostname  (.getHostName (java.net.InetAddress/getLocalHost))
    :appenders {:stdout {:min-level :debug,
                         :fn         (fn [data] (println (:output data)))}
 
@@ -66,26 +67,8 @@
     :fatal   100
     :seppuku 200 })
 
-(defn default-output-fn
-  "Default output generator for logger system. If appenders don't
-  introduce their own appender function, this one will generates the
-  output string."
-  [data]
-  (let [msg (apply str (:args data))]
-    ; I coulda use format instead of str, but format does not supported in cljs
-    (str (:timestamp data) " "
-         (:instance-name data) " "
-         (get data :ns "ns") ":"
-         (get data :fn-name "fn") " "
-         (get data :file "-") ":"
-         (:line data) " ["
-         (-> (:level data)
-             (clojure.string/replace ":" "")
-             clojure.string/upper-case) "] "
-         (apply str (:args data)))))
 
-
-
+;; Private functions -------------------------------------
 (defn- level-value
   "Return the corresponding integer for given level name."
   [level-symbol]
@@ -110,12 +93,32 @@
         new-data    (merge data {:output output})]
     (appender-fn new-data)))
 
+
 (defn- timestamp
   "It's obvious. isn't it ?"
   []
   (let [date (java.util.Date.)]
     (.format (java.text.SimpleDateFormat. "yyyy-MM-dd H:m:s") date)))
 
+
+;; Public functions & macros -------------------------------------
+(defn default-output-fn
+  "Default output generator for logger system. If appenders don't
+  introduce their own appender function, this one will generates the
+  output string."
+  [data]
+  (let [msg (apply str (:args data))]
+    ; I coulda use format instead of str, but format does not supported in cljs
+    (str (:timestamp data) " "
+         (:instance-name data) " "
+         (get data :ns "ns") ":"
+         (get data :fn-name "fn") " "
+         (get data :file "-") ":"
+         (:line data) " ["
+         (-> (:level data)
+             (clojure.string/replace ":" "")
+             clojure.string/upper-case) "] "
+         (apply str (:args data)))))
 
 
 (defmacro log
@@ -166,3 +169,12 @@
 (defmacro seppuku
   [& args]
   `(log :seppuku ~@args))
+
+(defn initialize
+  ([]
+   (initialize nil nil)
+   [zookeeper]
+   (initialize zookeeper nil)
+
+   [zookeeper config]
+   (let [instance-name (:me zookeeper)]))
