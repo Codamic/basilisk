@@ -46,6 +46,7 @@
             :reader :clojure
             :target "doc/"
             :src-uri "http://github.com/Codamic/basilisk/blob/master/"
+            :metadata {:doc/format :markdown}
             :src-uri-prefix "#L"}
 
   :main ^:skip-aot basilisk.core

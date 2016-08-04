@@ -1,16 +1,48 @@
 (ns basilisk.logger.core
   "Logger abstraction namespace. We don't use components
-  for the logger because besically it's not necessary."
+  for the logger because besically it's not necessary.
+
+  In order to use logger first your need to setup the configuration
+  in `project.clj` ( which we already did ).
+
+  After that you can simply use the `trace`, `debug`, `info`, `warn`
+  `error`, `fatal` and `seppuku` macros to log what ever you like.
+
+  #### Configuration
+
+  In order to configure logger you have to provide a `map` to `initialize`
+  function of define the map in `project.clj` under the specific profile
+  (for example under `:dev`). The configuration map schema is as follow:
+
+  ```clojure
+  {
+    :mint-level :debug    ; The logger level. Log entries with less priority
+                          ;  will skip.
+
+    :output-fn  default-output-fn     ; (optional) default output function
+                                      ; to generate the msg format. Each
+                                      ; appender can have its own function.
+
+    :appenders {       ; A map of appenders. Checkout the `basilisk.logger.appenders`
+      :stdout {        ; Simple console appender
+        :min-level :info
+        :fn (fn [data] (println (:output data)))
+      }
+    }
+  }
+  ```
+
+  "
   (:require [taoensso.timbre :as timbre]
             [clojure.tools.logging :as log]
             [basilisk.logger.kafka :as kafka]
             [environ.core :refer [env]]
-                                        ;[basilisk.logger.kafka :refer [kafka-appender]]
             [com.stuartsierra.component :as component]))
 
 (declare default-output-fn)
 
-(def default-config
+(def ^:no-doc default-config
+
   {:min-level :debug
    :output-fn default-output-fn
    :appenders {:stdout {:min-level :debug,
@@ -20,9 +52,12 @@
                          :output-fn  (fn [data] "NIL")
                          :fn         (fn [data] (println (:output data)))}}})
 
-(def config (atom default-config))
+(def ^:no-doc config (atom default-config))
 
 (def levels
+  "Default level priorities. If you use a level name
+  which does not exists in this map, It would get priority
+  of zero."
   { :trace   10
     :debug   20
     :info    40
@@ -84,6 +119,7 @@
 
 
 (defmacro log
+  "Log the given message as args with the given level."
   [level & args]
   (doseq [[name appender-config] (:appenders @config)]
     (let [min-level (or (:min-level appender-config)
