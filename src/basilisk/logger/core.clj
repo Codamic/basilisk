@@ -53,7 +53,7 @@
                          :output-fn  (fn [data] "NIL")
                          :fn         (fn [data] (println (:output data)))}}})
 
-(def ^:no-doc config (atom default-config))
+(def ^:no-doc configuration (atom default-config))
 
 (def levels
   "Default level priorities. If you use a level name
@@ -124,9 +124,9 @@
 (defmacro log
   "Log the given message as args with the given level."
   [level & args]
-  (doseq [[name appender-config] (:appenders @config)]
+  (doseq [[name appender-config] (:appenders @configuration)]
     (let [min-level (or (:min-level appender-config)
-                        (:min-level @config))
+                        (:min-level @configuration))
           metadata  (meta  &form)
           timestamp (timestamp)]
 
@@ -171,10 +171,11 @@
   `(log :seppuku ~@args))
 
 (defn initialize
+  "Initialize the logger system. If you provide any configuration
+  map to this function it will override the default one."
   ([]
-   (initialize nil nil)
-   [zookeeper]
-   (initialize zookeeper nil)
+   (initialize {}))
 
-   [zookeeper config]
-   (let [instance-name (:me zookeeper)]))
+  ([config]
+   (let [final-config (merge default-config config)]
+     (swap! configuration (fn [_] final-config))))
