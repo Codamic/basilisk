@@ -35,7 +35,7 @@
   "
   (:require [taoensso.timbre :as timbre]
             [clojure.tools.logging :as log]
-            [basilisk.logger.kafka :as kafka]
+            [basilisk.logger.appenders.kafka :as kafka]
             [environ.core :refer [env]]
             [com.stuartsierra.component :as component]))
 
