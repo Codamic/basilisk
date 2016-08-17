@@ -49,9 +49,9 @@
    :appenders {:stdout {:min-level :debug,
                         :fn         (fn [data] (println (:output data)))}
 
-               :stdout1 {:min-level :debug,
-                         :output-fn  (fn [data] "NIL")
-                         :fn         (fn [data] (println (:output data)))}}})
+               :kafka {:min-level :trace,
+                       :output-fn  kafka/output-fn
+                       :fn         kafka/appender}}})
 
 (def ^:no-doc configuration (atom default-config))
 
@@ -178,4 +178,5 @@
 
   ([config]
    (let [final-config (merge default-config config)]
+
      (swap! configuration (fn [_] final-config))))
