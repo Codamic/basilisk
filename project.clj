@@ -34,6 +34,7 @@
                  ;; Logging library
                  [com.taoensso/timbre "4.7.0"]
 
+                 [com.cognitect/transit-clj "0.8.288"]
                  [clj-json "0.5.3"]
                  [clojure-csv/clojure-csv "2.0.2"]
                  [org.clojure/core.async "0.2.385"]]
